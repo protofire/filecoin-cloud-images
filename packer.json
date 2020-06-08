@@ -1,0 +1,55 @@
+{
+    "variables": {
+        "aws_access_key": "{{env `AWS_ACCESS_KEY`}}",
+        "aws_secret_key": "{{env `AWS_SECRET_KEY`}}",
+        "aws_destination_regions": "us-east-2",
+        "aws_build_region": "us-east-2",
+	"latest_tag": "{{env `LATEST_TAG`}}",
+	"snapshot_url": "{{env `SNAPSHOT_URL`}}"
+    },
+    "sensitive-variables": ["aws_access_key","aws_secret_key"],
+    "builders": [
+        {
+            "ami_regions": "{{user `aws_destination_regions`}}",
+            "ami_groups": "all",
+            "access_key": "{{user `aws_access_key`}}",
+            "ami_name": "aws-filecoin-{{timestamp}}",
+            "instance_type": "c4.large",
+            "region": "{{user `aws_build_region`}}",
+            "secret_key": "{{user `aws_secret_key`}}",
+            "source_ami_filter": {
+              "filters": {
+              "virtualization-type": "hvm",
+              "name": "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
+              "root-device-type": "ebs"
+              },
+              "owners": ["099720109477"],
+              "most_recent": true
+            },
+            "ssh_username": "ubuntu",
+            "type": "amazon-ebs",
+            "launch_block_device_mappings": [
+             {
+                  "device_name": "/dev/sda1",
+                  "volume_size": 8,
+                  "volume_type": "gp2",
+                  "delete_on_termination": true
+             },
+             {
+                  "device_name": "/dev/sdb",
+                  "volume_size": 500,
+                  "volume_type": "gp2",
+                  "delete_on_termination": true
+             }
+          ]
+        }
+    ],
+    "provisioners": [
+       {
+            "type": "shell",
+            "execute_command": "{{.Vars}} sudo -E su root /bin/sh -c '{{.Path}}'",
+            "script": "bootstrap.sh",
+            "environment_vars": ["VERSION={{user `latest_tag`}}","SNAPSHOT_URL={{user `snapshot_url`}}"]            
+       }
+    ]
+}
