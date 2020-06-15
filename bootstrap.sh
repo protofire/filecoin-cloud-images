@@ -1,16 +1,9 @@
 #!/bin/bash
 set -xeE
 
-mount_drive() {
-    mkfs.xfs -f /dev/xvdb
-    # Mound disk and add automount entry in /etc/fstab
-    mkdir -p /root/.lotus
-    mount /dev/xvdb /root/.lotus
-    UUID=$(lsblk /dev/xvdb -nr -o UUID)
-    echo "UUID=${UUID} /root/.lotus xfs defaults 0 0" >> /etc/fstab
-}
-
 install_config() {
+
+mkdir -p /root/.lotus
 
 cat << EOF > /root/.lotus/config.toml
 
@@ -52,12 +45,13 @@ install_node() {
       echo ">>> Attempting to download snapshot..."
       wget -O /root/chain.car $SNAPSHOT_URL
       echo ">>> Done. Importing snapshot. This might take a while..."
-      /usr/local/bin/lotus daemon --halt-after-import --import-chain /root/chain.car
+      /usr/local/bin/lotus daemon --halt-after-import --import-chain /root/chain.car || true
       echo ">>> Imported. Starting node to sync..."
       systemctl restart lotus-daemon
       echo ">>> Node started."
+    else
+      echo ">> Snapshot does not exist."
     fi
-    echo ">> Snapshot imported"
     
     set +eE
     while true; do
@@ -83,15 +77,18 @@ install_ipfs() {
     tar -xzf go-ipfs_${LATEST_RELEASE}_linux-amd64.tar.gz
     echo ">> Unpacked. Installing IPFS..."
     cd /root/go-ipfs
-    source install.sh
+    mv ipfs /usr/bin/ 
+    chmod a+x /usr/bin/ipfs
     echo ">> Installed. Installing SystemD configs..."
-    wget -o /etc/systemd/system/ipfs.service  https://raw.githubusercontent.com/ipfs/go-ipfs/master/misc/systemd/ipfs.service
+    wget -O /etc/systemd/system/ipfs.service  https://raw.githubusercontent.com/ipfs/go-ipfs/master/misc/systemd/ipfs.service
     mkdir -p /etc/systemd/system/ipfs.service.d/
-    wget -o /etc/systemd/system/ipfs.service.d/ipfs-api.socket https://raw.githubusercontent.com/ipfs/go-ipfs/master/misc/systemd/ipfs-api.socket
-    wget -o /etc/systemd/system/ipfs.service.d/ipfs-sysusers.conf https://raw.githubusercontent.com/ipfs/go-ipfs/master/misc/systemd/ipfs-sysusers.conf
+    wget -O /etc/systemd/system/ipfs.service.d/ipfs-api.socket https://raw.githubusercontent.com/ipfs/go-ipfs/master/misc/systemd/ipfs-api.socket
+    wget -O /etc/systemd/system/ipfs.service.d/ipfs-sysusers.conf https://raw.githubusercontent.com/ipfs/go-ipfs/master/misc/systemd/ipfs-sysusers.conf
     echo ">> Installed. Reloading SystemD..."
     systemctl daemon-reload
-    echo ">> Reloaded. Running and enabling IPFS node via SystemD..."
+    echo ">> Reloaded. Creating ipfs user..."
+    useradd -m ipfs
+    echo ">> Added. Running and enabling IPFS node via SystemD..."
     systemctl enable ipfs.service && systemctl start ipfs.service
     echo ">> Done."
     echo "> IPFS node installed."
@@ -104,10 +101,10 @@ install_powergate() {
     cd /root
     echo ">> Clonning the Powergate repo..."
     git clone https://github.com/textileio/powergate /root/powergate
-    cd /root/powergate
     echo ">> Cloned. Building Powergate..."
-    GOBIN=/usr/local/bin/
+    cd /root/powergate
     make build-powd
+    cp /root/go/bin/powd /usr/local/bin/powd
     echo ">> Built. Installing SystemD service..."
 
 cat <<EOF > /etc/systemd/system/powergate.service
@@ -135,10 +132,8 @@ EOF
 
 echo "Initial script started."
 
-mount_drive
-
 echo "> Updating apps and installing deps"
-add-apt-repository ppa:longsleep/golang-backports && apt-get update -y && apt-get install -yy golang-go gcc git bzr jq pkg-config mesa-opencl-icd ocl-icd-opencl-dev && apt-get dist-upgrade
+add-apt-repository ppa:longsleep/golang-backports && apt-get update -y && apt-get install -yy make golang-go gcc git bzr jq pkg-config mesa-opencl-icd ocl-icd-opencl-dev && apt-get dist-upgrade -y
 echo "> Apps set installed."
 
 install_config
