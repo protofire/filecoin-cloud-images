@@ -1,0 +1,47 @@
+{
+    "variables": {
+        "gcp_storage": "{{env `GCP_STORAGE`}}",
+	"gcp_project": "{{env `GCP_PROJECT`}}",
+	"gcp_build_zone": "us-central1-a",
+	"latest_tag": "{{env `LATEST_TAG`}}",
+	"snapshot_url": "{{env `SNAPSHOT_URL`}}",
+        "volume_size": "60"
+    },
+    "builders": [
+       {
+            "type": "googlecompute",
+            "account_file": "account.json",
+	    "disk_size": "{{user `volume_size`}}",
+            "project_id": "{{user `gcp_project`}}",
+            "source_image_family": "ubuntu-1804-lts",
+            "ssh_username": "ubuntu",
+	    "machine_type": "c2-standard-4",
+            "zone": "{{user `gcp_build_zone`}}",
+            "image_family": "filecoin-{{user `latest_tag` | clean_resource_name}}",
+	    "image_name": "filecoin-{{user `latest_tag` | clean_resource_name}}-{{isotime | clean_resource_name}}"
+        }
+    ],
+    "provisioners": [
+       {
+            "type": "shell",
+            "execute_command": "{{.Vars}} sudo -E su root /bin/sh -c '{{.Path}}'",
+            "script": "bootstrap.sh",
+            "environment_vars": ["VERSION={{user `latest_tag`}}","SNAPSHOT_URL={{user `snapshot_url`}}"]            
+       }
+    ],
+    "post-processors": [
+        {
+          "type": "googlecompute-export",
+          "only": ["googlecompute"],
+          "paths": [
+            "gs://{{user `gcp_storage`}}/gcp-filecoin-{{user `latest_tag`}}-latest.tar.gz" 
+          ],
+          "keep_input_artifact": false
+        },
+        {
+          "output": "manifest.json",
+          "strip_path": true,
+          "type": "manifest"
+        }
+    ]
+}

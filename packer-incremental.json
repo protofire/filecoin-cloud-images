@@ -25,7 +25,7 @@
             "account_file": "account.json",
 	    "disk_size": "{{user `volume_size`}}",
             "project_id": "{{user `gcp_project`}}",
-            "source_image_family": "ubuntu-1804-lts",
+            "source_image_family": "filecoin-{{user `latest_tag` | clean_resource_name}}",
             "ssh_username": "ubuntu",
 	    "machine_type": "c2-standard-4",
             "zone": "{{user `gcp_build_zone`}}",
@@ -45,9 +45,7 @@
 	    "capture_name_prefix": "Filecoin-{{user `latest_tag` | clean_resource_name}}",
             "disk_additional_size": ["{{user `volume_size`}}"],
             "os_type": "Linux",
-            "image_publisher": "Canonical",
-            "image_offer": "UbuntuServer",
-            "image_sku": "18.04-LTS",
+            "image_url": "<TODO>",
             "azure_tags": {
               "application": "Filecoin",
               "build": "{{user `latest_tag`}}"
@@ -66,41 +64,18 @@
             "source_ami_filter": {
               "filters": {
               "virtualization-type": "hvm",
-              "name": "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
+              "name": "filecoin-{{user `source_tag`}}-*",
               "root-device-type": "ebs"
               },
-              "owners": ["099720109477"],
+              "owners": ["711012187398"],
               "most_recent": true
             },
             "ssh_username": "ubuntu",
-            "type": "amazon-ebs",
-            "launch_block_device_mappings": [
-             {
-                  "device_name": "/dev/sda1",
-                  "volume_size": 8,
-                  "volume_type": "gp2",
-                  "delete_on_termination": true
-             },
-             {
-                  "device_name": "/dev/sdb",
-                  "volume_size": "{{user `volume_size`}}",
-                  "volume_type": "gp2",
-                  "delete_on_termination": true
-             }
+            "type": "amazon-ebs"
           ]
         }
     ],
     "provisioners": [
-       {
-            "type": "shell",
-            "script": "skip.sh", 
-	    "execute_command": "{{.Vars}} sudo -E su root /bin/sh -c '{{.Path}}'",
-            "override": {
-              "amazon-ebs": {
-		"script": "aws_disk_mount.sh"
-              }
-            }
-       },
        {
             "type": "shell",
             "script": "skip.sh", 
@@ -142,6 +117,15 @@
           "output": "manifest.json",
           "strip_path": true,
           "type": "manifest"
+        },
+        {
+          "only": ["azure-arm"],
+          "inline": [
+            "export azurebuild=$(jq \"[.builds[] | select (.builder_type==\\\"azure-arm\\\")] | max_by(\\\"build_time\\\") | .artifact_id\" manifest.json | cut -d'\"' -f 2)",
+            "az login --service-principal -u {{user `azure_client_id`}} -p {{user `azure_client_secret`}} --tenant {{user `azure_tenant_id`}}",
+            "az storage blob copy start -b azure-tezos-{{user `latest_tag`}}-latest.vhd -c {{user `azure_container`}} --account-name {{user `azure_storage_account`}} --source-uri $azurebuild"
+          ],
+          "type": "shell-local"
         }
     ]
 }
