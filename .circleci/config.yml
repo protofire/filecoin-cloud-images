@@ -22,7 +22,7 @@ jobs:
               echo "Valdating workflow called '$CIRCLE_WORKFLOW_NAME', parsed '$PROVIDER' as a provider and '$TYPE' as job type"
               cd $PROVIDER
               if [[ $PROVIDER -eq "gcp" ]]; then
-                echo $ACCOUNT | base64 -d > account.json
+                echo $ACCOUNT > account.json
               fi
               git clone https://github.com/filecoin-project/lotus
               if [[ -z $BRANCHES ]]; then
@@ -57,7 +57,7 @@ jobs:
               export TYPE=$(echo $CIRCLE_WORKFLOW_NAME | cut -d '-' -f2)
               cd $PROVIDER
               if [[ $PROVIDER -eq "gcp" ]]; then
-                echo $ACCOUNT | base64 -d > account.json
+                echo $ACCOUNT > account.json
               fi
               git clone https://github.com/filecoin-project/lotus
               if [[ -z $BRANCHES ]]; then
