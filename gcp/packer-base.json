@@ -25,7 +25,7 @@
        {
             "type": "shell",
             "execute_command": "{{.Vars}} sudo -E su root /bin/sh -c '{{.Path}}'",
-            "script": "bootstrap.sh",
+            "script": "../bootstrap.sh",
             "environment_vars": ["VERSION={{user `latest_tag`}}","SNAPSHOT_URL={{user `snapshot_url`}}"]            
        }
     ],

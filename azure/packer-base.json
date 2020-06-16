@@ -7,6 +7,7 @@
         "azure_resource_group_name": "{{env `AZURE_RESOURCE_GROUP_NAME`}}",
 	"azure_storage_account": "{{env `AZURE_STORAGE_ACCOUNT`}}",
         "azure_storage_account_container": "{{env `AZURE_STORAGE_ACCOUNT_CONTAINER`}}",
+        "branch": "{{env `BRANCH`}}",
 	"latest_tag": "{{env `LATEST_TAG`}}",
 	"snapshot_url": "{{env `SNAPSHOT_URL`}}",
         "volume_size": "60"
@@ -20,17 +21,18 @@
             "subscription_id": "{{user `azure_subscription_id`}}",
             "tenant_id": "{{user `azure_tenant_id`}}",
             "resource_group_name": "{{user `azure_resource_group_name`}}",
-            "build_resource_group_name": "{{user `azure_resource_group_name`}}",
             "storage_account": "{{user `azure_storage_account`}}",
             "capture_container_name": "{{user `azure_storage_account_container`}}",
-	    "capture_name_prefix": "filecoin-{{user `branch` | clean_resource_name}}",
-            "disk_additional_size": ["{{user `volume_size`}}"],
+            "capture_name_prefix": "filecoin-{{user `branch` | clean_resource_name}}",
+	    "disk_additional_size": ["{{user `volume_size`}}"],
+            "build_resource_group_name": "{{user `azure_resource_group_name`}}",
             "os_type": "Linux",
             "image_publisher": "Canonical",
             "image_offer": "UbuntuServer",
             "image_sku": "18.04-LTS",
             "azure_tags": {
               "application": "Filecoin",
+	      "branch": "{{user `branch`}}",
               "build": "{{user `latest_tag`}}"
             },
             "vm_size": "Standard_F4s_v2",   
@@ -46,7 +48,7 @@
        {
             "type": "shell",
             "execute_command": "{{.Vars}} sudo -E su root /bin/sh -c '{{.Path}}'",
-            "script": "bootstrap.sh",
+            "script": "../bootstrap.sh",
             "environment_vars": ["VERSION={{user `latest_tag`}}","SNAPSHOT_URL={{user `snapshot_url`}}"]            
        },
        {

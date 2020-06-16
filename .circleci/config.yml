@@ -16,9 +16,9 @@ jobs:
             name: Validate Packer configuration
             command: |
               apk add jq curl
-              export CIRCLE_WORKFLOW_NAME=$(curl https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM} | jq .workflows.workflow_name -r)
-              export PROVIDER=$(echo $CIRCLE_WORKFLOW_NAME | cut -d '-' -f0)
-              export TYPE=$(echo $CIRCLE_WORKFLOW_NAME | cut -d '-' -f1)
+              export CIRCLE_WORKFLOW_NAME=$(curl -s https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM} | jq .workflows.workflow_name -r)
+              export PROVIDER=$(echo $CIRCLE_WORKFLOW_NAME | cut -d '-' -f1)
+              export TYPE=$(echo $CIRCLE_WORKFLOW_NAME | cut -d '-' -f2)
               echo "Valdating workflow called '$CIRCLE_WORKFLOW_NAME', parsed '$PROVIDER' as a provider and '$TYPE' as job type"
               cd $PROVIDER
               if [[ $TYPE = "base" ]]; then
@@ -37,9 +37,9 @@ jobs:
             name: Build Packer configuration
             command: |
               apk add jq curl
-              export CIRCLE_WORKFLOW_NAME=$(curl https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM} | jq .workflows.workflow_name -r)
-              export PROVIDER=$(echo $CIRCLE_WORKFLOW_NAME | cut -d '-' -f0)
-              export TYPE=$(echo $CIRCLE_WORKFLOW_NAME | cut -d '-' -f1)
+              export CIRCLE_WORKFLOW_NAME=$(curl -s https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM} | jq .workflows.workflow_name -r)
+              export PROVIDER=$(echo $CIRCLE_WORKFLOW_NAME | cut -d '-' -f1)
+              export TYPE=$(echo $CIRCLE_WORKFLOW_NAME | cut -d '-' -f2)
               cd $PROVIDER
               if [[ $PROVIDER -eq "gcp" ]]; then
                 echo $ACCOUNT | base64 -d > account.json

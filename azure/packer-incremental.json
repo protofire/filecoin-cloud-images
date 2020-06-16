@@ -28,7 +28,7 @@
 	    "capture_name_prefix": "filecoin-{{user `latest_tag` | clean_resource_name}}",
             "disk_additional_size": ["{{user `volume_size`}}"],
             "os_type": "Linux",
-            "image_url": "https://filecoin.blob.core.windows.net/vhds/filecoin-{{user `branch` | clean_resource_name}}-osDisk.vhd",
+            "image_url": "https://filecoin.blob.core.windows.net/vhds/filecoin-{{user `branch`}}-osDisk.vhd",
             "azure_tags": {
               "application": "Filecoin",
               "build": "{{user `latest_tag`}}"
@@ -40,17 +40,17 @@
     "provisioners": [
        {
 	    "type": "shell-local",
-	    "inline": "az vm unmanaged-disk attach -g {{user `azure_resource_group_name`}} --vm-name filecoin --name data --vhd-uri https://filecoin.blob.core.windows.net/vhds/filecoin-{{user `branch` | clean_resource_name}}-dataDisk-0.vhd"
+	    "inline": "az vm unmanaged-disk attach -g {{user `azure_resource_group_name`}} --vm-name filecoin --name data --vhd-uri https://filecoin.blob.core.windows.net/vhds/filecoin-{{user `branch`}}-dataDisk-0.vhd"
        },
        {
             "type": "shell",
-            "script": "azure_disk_mount.sh", 
+            "script": "disk_mount.sh", 
             "execute_command": "{{.Vars}} sudo -E su root /bin/sh -c '{{.Path}}'"
        },
        {
             "type": "shell",
             "execute_command": "{{.Vars}} sudo -E su root /bin/sh -c '{{.Path}}'",
-            "script": "bootstrap.sh",
+            "script": "../bootstrap.sh",
             "environment_vars": ["VERSION={{user `latest_tag`}}","SNAPSHOT_URL={{user `snapshot_url`}}"]            
        },
        {

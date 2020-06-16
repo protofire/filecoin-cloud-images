@@ -30,7 +30,6 @@
             },
             "ssh_username": "ubuntu",
             "type": "amazon-ebs"
-          ]
         }
     ],
     "provisioners": [

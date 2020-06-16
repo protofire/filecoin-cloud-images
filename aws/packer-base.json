@@ -31,20 +31,20 @@
             "ssh_username": "ubuntu",
             "type": "amazon-ebs",
             "launch_block_device_mappings": [
-             {
-                  "device_name": "/dev/sda1",
-                  "volume_size": 8,
-                  "volume_type": "gp2",
-                  "delete_on_termination": true
-             },
-             {
-                  "device_name": "/dev/sdb",
-                  "volume_size": "{{user `volume_size`}}",
-                  "volume_type": "gp2",
-                  "delete_on_termination": true
-             }
-          ]
-        }
+                 {
+                    "device_name": "/dev/sda1",
+                    "volume_size": 8,
+                    "volume_type": "gp2",
+                    "delete_on_termination": true
+                 },
+                 {
+                    "device_name": "/dev/sdb",
+                    "volume_size": "{{user `volume_size`}}",
+                    "volume_type": "gp2",
+                    "delete_on_termination": true
+                 }
+             ]
+       }
     ],
     "provisioners": [
        {
@@ -57,7 +57,7 @@
             "execute_command": "{{.Vars}} sudo -E su root /bin/sh -c '{{.Path}}'",
             "script": "../bootstrap.sh",
             "environment_vars": ["VERSION={{user `latest_tag`}}","SNAPSHOT_URL={{user `snapshot_url`}}"]            
-       },
+       }
     ],
     "post-processors": [
         {
