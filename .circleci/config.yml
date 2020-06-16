@@ -7,6 +7,7 @@ jobs:
   validate:
     docker:
     - image: hashicorp/packer:latest
+    resource_class: small
     steps:
         - checkout
         - run:
@@ -47,10 +48,12 @@ jobs:
   build:
     docker:
     - image: hashicorp/packer:latest
+    resource_class: small
     steps:
         - checkout
         - run:
             name: Build Packer configuration
+            no_output_timeout: 21d
             command: |
               apk add jq curl
               export CIRCLE_WORKFLOW_NAME=$(curl -s https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM} | jq .workflows.workflow_name -r)
