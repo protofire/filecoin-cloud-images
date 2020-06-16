@@ -15,7 +15,7 @@ jobs:
         - run:
             name: Validate Packer configuration
             command: |
-              apk add jq
+              apk add jq curl
               export CIRCLE_WORKFLOW_NAME=$(curl https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM} | jq .workflows.workflow_name -r)
               PROVIDER=$(echo $CIRCLE_WORKFLOW_NAME | cut -d '-' -f0)
               TYPE=$(echo $CIRCLE_WORKFLOW_NAME | cut -d '-' -f1)
@@ -35,7 +35,7 @@ jobs:
         - run:
             name: Build Packer configuration
             command: |
-              apk add jq
+              apk add jq curl
               export CIRCLE_WORKFLOW_NAME=$(curl https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM} | jq .workflows.workflow_name -r)
               PROVIDER=$(echo $CIRCLE_WORKFLOW_NAME | cut -d '-' -f0)
               TYPE=$(echo $CIRCLE_WORKFLOW_NAME | cut -d '-' -f1)
