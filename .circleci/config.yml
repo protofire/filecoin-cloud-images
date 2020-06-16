@@ -88,9 +88,15 @@ workflows:
   aws-base:
     jobs:
       - validate
+      - approve_rebuild:
+          type: approval
+          filters:
+            branches:
+              only: master
       - build:
-          requires: 
+          requires:
             - validate
+            - approve_rebuild
   aws-incremental:
     triggers:
       - schedule:
@@ -107,9 +113,15 @@ workflows:
   azure-base:
     jobs:
       - validate
+      - approve_rebuild:
+          type: approval
+          filters:
+            branches:
+              only: master
       - build:
           requires: 
             - validate
+            - approve_rebuild
   azure-incremental:
     triggers:
       - schedule:
@@ -126,9 +138,15 @@ workflows:
   gcp-base:
     jobs:
       - validate
+      - approve_rebuild:
+          type: approval
+          filters:
+            branches:
+              only: master
       - build:
           requires: 
             - validate
+            - approve_rebuild
   gcp-incremental:
     triggers:
       - schedule:
