@@ -5,11 +5,11 @@
         "azure_tenant_id": "{{env `AZURE_TENANT_ID`}}",
         "azure_client_secret": "{{env `AZURE_CLIENT_SECRET`}}",
         "azure_resource_group_name": "{{env `AZURE_RESOURCE_GROUP_NAME`}}",
-		"azure_storage_account": "{{env `AZURE_STORAGE_ACCOUNT`}}",
+        "azure_storage_account": "{{env `AZURE_STORAGE_ACCOUNT`}}",
         "azure_storage_account_container": "{{env `AZURE_STORAGE_ACCOUNT_CONTAINER`}}",
-		"source_tag": "{{env `SOURCE_TAG`}}",
-		"latest_tag": "{{env `LATEST_TAG`}}",
-		"snapshot_url": "{{env `SNAPSHOT_URL`}}",
+        "branch": "{{env `BRANCH`}}",
+        "latest_tag": "{{env `LATEST_TAG`}}",
+        "snapshot_url": "{{env `SNAPSHOT_URL`}}",
         "volume_size": "60"
     },
     "sensitive-variables": ["azure_subscription_id","azure_tenant_id","azure_client_secret"],
@@ -22,21 +22,26 @@
             "tenant_id": "{{user `azure_tenant_id`}}",
             "resource_group_name": "{{user `azure_resource_group_name`}}",
             "build_resource_group_name": "{{user `azure_resource_group_name`}}",
-			"storage_account": "{{user `azure_storage_account`}}",
+            "temp_compute_name": "filecoin",
+	    "storage_account": "{{user `azure_storage_account`}}",
             "capture_container_name": "{{user `azure_storage_account_container`}}",
-			"capture_name_prefix": "Filecoin-{{user `latest_tag` | clean_resource_name}}",
+	    "capture_name_prefix": "filecoin-{{user `latest_tag` | clean_resource_name}}",
             "disk_additional_size": ["{{user `volume_size`}}"],
             "os_type": "Linux",
-            "image_url": "<TODO>",
+            "image_url": "https://filecoin.blob.core.windows.net/vhds/filecoin-{{user `branch` | clean_resource_name}}-osDisk.vhd",
             "azure_tags": {
               "application": "Filecoin",
               "build": "{{user `latest_tag`}}"
             },
             "vm_size": "Standard_F4s_v2",   
-			"ssh_username": "ubuntu",
-		}
+	    "ssh_username": "ubuntu"
+	}
     ],
     "provisioners": [
+       {
+	    "type": "shell-local",
+	    "inline": "az vm unmanaged-disk attach -g {{user `azure_resource_group_name`}} --vm-name filecoin --name data --vhd-uri https://filecoin.blob.core.windows.net/vhds/filecoin-{{user `branch` | clean_resource_name}}-dataDisk-0.vhd"
+       },
        {
             "type": "shell",
             "script": "azure_disk_mount.sh", 
@@ -60,14 +65,6 @@
           "output": "manifest.json",
           "strip_path": true,
           "type": "manifest"
-        },
-        {
-          "inline": [
-            "export azurebuild=$(jq \"[.builds[] | select (.builder_type==\\\"azure-arm\\\")] | max_by(\\\"build_time\\\") | .artifact_id\" manifest.json | cut -d'\"' -f 2)",
-            "az login --service-principal -u {{user `azure_client_id`}} -p {{user `azure_client_secret`}} --tenant {{user `azure_tenant_id`}}",
-            "az storage blob copy start -b azure-tezos-{{user `latest_tag`}}-latest.vhd -c {{user `azure_container`}} --account-name {{user `azure_storage_account`}} --source-uri $azurebuild"
-          ],
-          "type": "shell-local"
         }
     ]
 }

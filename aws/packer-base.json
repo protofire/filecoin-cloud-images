@@ -4,8 +4,9 @@
         "aws_secret_key": "{{env `AWS_SECRET_KEY`}}",
         "aws_destination_regions": "us-east-2",
         "aws_build_region": "us-east-2",
-		"latest_tag": "{{env `LATEST_TAG`}}",
-		"snapshot_url": "{{env `SNAPSHOT_URL`}}",
+        "branch": "{{env `BRANCH`}}",
+	"latest_tag": "{{env `LATEST_TAG`}}",
+        "snapshot_url": "{{env `SNAPSHOT_URL`}}",
         "volume_size": "60"
     },
     "sensitive-variables": ["aws_access_key","aws_secret_key"],
@@ -14,7 +15,7 @@
             "ami_regions": "{{user `aws_destination_regions`}}",
             "ami_groups": "all",
             "access_key": "{{user `aws_access_key`}}",
-            "ami_name": "filecoin-{{user `latest_tag` | clean_resource_name}}-{{isotime | clean_resource_name}}",
+            "ami_name": "filecoin-{{user `branch` | clean_resource_name}}-{{user `latest_tag` | clean_resource_name}}-{{isotime | clean_resource_name}}",
             "instance_type": "c4.xlarge",
             "region": "{{user `aws_build_region`}}",
             "secret_key": "{{user `aws_secret_key`}}",
@@ -49,7 +50,7 @@
        {
             "type": "shell",
             "script": "disk_mount.sh", 
-			"execute_command": "{{.Vars}} sudo -E su root /bin/sh -c '{{.Path}}'"
+            "execute_command": "{{.Vars}} sudo -E su root /bin/sh -c '{{.Path}}'"
        },
        {
             "type": "shell",

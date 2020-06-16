@@ -33,14 +33,21 @@ jobs:
         - run:
             name: Build Packer configuration
             command: |
-              PROVIDER=($CIRCLE_WORKFLOW_ID | cut -d '-' -f0)
-              TYPE=($CIRCLE_WORKFLOW_ID | cut -d '-' -f1)
+              PROVIDER=$($CIRCLE_WORKFLOW_ID | cut -d '-' -f0)
+              TYPE=$($CIRCLE_WORKFLOW_ID | cut -d '-' -f1)
               cd $PROVIDER
-              if [[ $TYPE = "base" ]]; then
-                packer build packer-base.json
-              else
-                packer build packer-incremental.json
-              fi              
+              git clone https://github.com/filecoin-project/lotus
+              for BRANCH in ${BRANCHES[@]}; do
+                cd lotus
+                git checkout $BRANCH
+                export LATEST_TAG=$(git describe --abbrev=0 --tags)
+                cd ../
+                if [[ $TYPE = "base" ]]; then
+                  packer build packer-base.json
+                else
+                  packer build packer-incremental.json
+                fi
+              done              
         - slack/status
 
 workflows:
