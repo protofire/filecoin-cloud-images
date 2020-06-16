@@ -1,0 +1,92 @@
+version: 2.1
+
+orbs:
+  slack: circleci/slack@3.4.2
+
+jobs:
+  validate:
+    docker:
+    - image: hashicorp/packer:latest
+    steps:
+        - checkout
+        - run:
+            name: Get version
+            command: packer --version
+        - run:
+            name: Validate Packer configuration
+            command: |
+              PROVIDER=($CIRCLE_WORKFLOW_ID | cut -d '-' -f0)
+              TYPE=($CIRCLE_WORKFLOW_ID | cut -d '-' -f1)
+              cd $PROVIDER
+              if [[ $TYPE = "base" ]]; then
+                packer validate packer-base.json
+              else
+                packer validate packer-incremental.json
+              fi
+        - slack/status
+
+  build:
+    docker:
+    - image: hashicorp/packer:latest
+    steps:
+        - checkout
+        - run:
+            name: Build Packer configuration
+            command: |
+              PROVIDER=($CIRCLE_WORKFLOW_ID | cut -d '-' -f0)
+              TYPE=($CIRCLE_WORKFLOW_ID | cut -d '-' -f1)
+              cd $PROVIDER
+              if [[ $TYPE = "base" ]]; then
+                packer build packer-base.json
+              else
+                packer build packer-incremental.json
+              fi              
+        - slack/status
+
+workflows:
+  version: 2
+  aws-base:
+    jobs:
+      - validate
+      - build
+  aws-incremental:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - validate
+      - build
+  azure-base:
+    jobs:
+      - validate
+      - build
+  azure-incremental:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - validate
+      - build
+  gcp-base:
+    jobs:
+      - validate
+      - build
+  gcp-incremental:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - validate
+      - build

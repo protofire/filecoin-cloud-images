@@ -5,10 +5,11 @@
         "azure_tenant_id": "{{env `AZURE_TENANT_ID`}}",
         "azure_client_secret": "{{env `AZURE_CLIENT_SECRET`}}",
         "azure_resource_group_name": "{{env `AZURE_RESOURCE_GROUP_NAME`}}",
-	"azure_storage_account": "{{env `AZURE_STORAGE_ACCOUNT`}}",
+		"azure_storage_account": "{{env `AZURE_STORAGE_ACCOUNT`}}",
         "azure_storage_account_container": "{{env `AZURE_STORAGE_ACCOUNT_CONTAINER`}}",
-	"latest_tag": "{{env `LATEST_TAG`}}",
-	"snapshot_url": "{{env `SNAPSHOT_URL`}}",
+		"source_tag": "{{env `SOURCE_TAG`}}",
+		"latest_tag": "{{env `LATEST_TAG`}}",
+		"snapshot_url": "{{env `SNAPSHOT_URL`}}",
         "volume_size": "60"
     },
     "sensitive-variables": ["azure_subscription_id","azure_tenant_id","azure_client_secret"],
@@ -21,32 +22,25 @@
             "tenant_id": "{{user `azure_tenant_id`}}",
             "resource_group_name": "{{user `azure_resource_group_name`}}",
             "build_resource_group_name": "{{user `azure_resource_group_name`}}",
-	    "storage_account": "{{user `azure_storage_account`}}",
+			"storage_account": "{{user `azure_storage_account`}}",
             "capture_container_name": "{{user `azure_storage_account_container`}}",
-	    "capture_name_prefix": "Filecoin-{{user `latest_tag` | clean_resource_name}}",
+			"capture_name_prefix": "Filecoin-{{user `latest_tag` | clean_resource_name}}",
             "disk_additional_size": ["{{user `volume_size`}}"],
             "os_type": "Linux",
-            "image_publisher": "Canonical",
-            "image_offer": "UbuntuServer",
-            "image_sku": "18.04-LTS",
+            "image_url": "<TODO>",
             "azure_tags": {
               "application": "Filecoin",
               "build": "{{user `latest_tag`}}"
             },
             "vm_size": "Standard_F4s_v2",   
-	    "ssh_username": "ubuntu",
-	}
+			"ssh_username": "ubuntu",
+		}
     ],
     "provisioners": [
        {
             "type": "shell",
-            "script": "skip.sh", 
-            "execute_command": "{{.Vars}} sudo -E su root /bin/sh -c '{{.Path}}'",
-	    "override": {
-              "azure-arm": {
-		"script": "azure_disk_mount.sh"
-              }
-            }
+            "script": "azure_disk_mount.sh", 
+            "execute_command": "{{.Vars}} sudo -E su root /bin/sh -c '{{.Path}}'"
        },
        {
             "type": "shell",
@@ -56,14 +50,9 @@
        },
        {
             "type": "shell",
-            "inline": "echo 'Skipping this step for AWS and GCP...'", 
-            "override": {
-              "azure-arm": {
-                "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
-                "inline": "/usr/sbin/waagent -force -deprovision && export HISTSIZE=0 && sync",
-                "inline_shebang": "/bin/sh -x"
-              }
-            }
+            "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "inline": "/usr/sbin/waagent -force -deprovision && export HISTSIZE=0 && sync",
+            "inline_shebang": "/bin/sh -x"
        }
     ],
     "post-processors": [
@@ -71,6 +60,14 @@
           "output": "manifest.json",
           "strip_path": true,
           "type": "manifest"
+        },
+        {
+          "inline": [
+            "export azurebuild=$(jq \"[.builds[] | select (.builder_type==\\\"azure-arm\\\")] | max_by(\\\"build_time\\\") | .artifact_id\" manifest.json | cut -d'\"' -f 2)",
+            "az login --service-principal -u {{user `azure_client_id`}} -p {{user `azure_client_secret`}} --tenant {{user `azure_tenant_id`}}",
+            "az storage blob copy start -b azure-tezos-{{user `latest_tag`}}-latest.vhd -c {{user `azure_container`}} --account-name {{user `azure_storage_account`}} --source-uri $azurebuild"
+          ],
+          "type": "shell-local"
         }
     ]
 }
