@@ -29,7 +29,8 @@ jobs:
                 echo '$BRANCHES variable is not set. Please, set it as a project variable. Exiting...'
                 return 1
               fi
-              for BRANCH in ${BRANCHES[@]}; do
+              IFS=',' read -r -a ARRAYBRANCHES <<< "$BRANCHES"
+              for BRANCH in ${ARRAYBRANCHES[@]}; do
                 cd lotus
                 git checkout $BRANCH
                 export LATEST_TAG=$(git describe --abbrev=0 --tags)
@@ -63,7 +64,8 @@ jobs:
                 echo '$BRANCHES variable is not set. Please, set it as a project variable. Exiting...'
                 return 1
               fi
-              for BRANCH in ${BRANCHES[@]}; do
+              IFS=',' read -r -a ARRAYBRANCHES <<< "$BRANCHES"
+              for BRANCH in ${ARRAYBRANCHES[@]}; do
                 cd lotus
                 git checkout $BRANCH
                 export LATEST_TAG=$(git describe --abbrev=0 --tags)
