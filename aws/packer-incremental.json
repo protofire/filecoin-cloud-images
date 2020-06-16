@@ -43,7 +43,7 @@
     ],
     "post-processors": [
         {
-          "output": "manifest.json",
+          "output": "/tmp/manifest.json",
           "strip_path": true,
           "type": "manifest"
         } 

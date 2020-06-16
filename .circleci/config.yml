@@ -36,6 +36,9 @@ jobs:
               PROVIDER=$($CIRCLE_WORKFLOW_ID | cut -d '-' -f0)
               TYPE=$($CIRCLE_WORKFLOW_ID | cut -d '-' -f1)
               cd $PROVIDER
+              if [[ $PROVIDER -eq "gcp" ]]; then
+                echo $ACCOUNT | base64 -d > account.json
+              fi
               git clone https://github.com/filecoin-project/lotus
               for BRANCH in ${BRANCHES[@]}; do
                 cd lotus
@@ -47,7 +50,10 @@ jobs:
                 else
                   packer build packer-incremental.json
                 fi
-              done              
+              done
+        - store_artifacts:
+            path: manifest.json
+            destination: manifest.json              
         - slack/status
 
 workflows:
