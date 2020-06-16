@@ -22,7 +22,7 @@ jobs:
               echo "Valdating workflow called '$CIRCLE_WORKFLOW_NAME', parsed '$PROVIDER' as a provider and '$TYPE' as job type"
               cd $PROVIDER
               if [[ $PROVIDER -eq "gcp" ]]; then
-                echo $ACCOUNT > account.json
+                echo $GCP_ACCOUNT > account.json
               fi
               git clone https://github.com/filecoin-project/lotus
               if [[ -z $BRANCHES ]]; then
@@ -57,14 +57,14 @@ jobs:
               export TYPE=$(echo $CIRCLE_WORKFLOW_NAME | cut -d '-' -f2)
               cd $PROVIDER
               if [[ $PROVIDER -eq "gcp" ]]; then
-                echo $ACCOUNT > account.json
+                echo $GCP_ACCOUNT > account.json
               fi
               git clone https://github.com/filecoin-project/lotus
               if [[ -z $BRANCHES ]]; then
                 echo '$BRANCHES variable is not set. Please, set it as a project variable. Exiting...'
                 return 1
               fi
-              IFS=',' read -r -a ARRAYBRANCHES \<\<\< "$BRANCHES"
+              IFS=',' read -r -a ARRAYBRANCHES \<<< "$BRANCHES"
               for BRANCH in ${ARRAYBRANCHES[@]}; do
                 cd lotus
                 git checkout $BRANCH
