@@ -21,11 +21,25 @@ jobs:
               export TYPE=$(echo $CIRCLE_WORKFLOW_NAME | cut -d '-' -f2)
               echo "Valdating workflow called '$CIRCLE_WORKFLOW_NAME', parsed '$PROVIDER' as a provider and '$TYPE' as job type"
               cd $PROVIDER
-              if [[ $TYPE = "base" ]]; then
-                packer validate packer-base.json
-              else
-                packer validate packer-incremental.json
+              if [[ $PROVIDER -eq "gcp" ]]; then
+                echo $ACCOUNT | base64 -d > account.json
               fi
+              git clone https://github.com/filecoin-project/lotus
+              if [[ -z $BRANCHES ]]; then
+                echo '$BRANCHES variable is not set. Please, set it as a project variable. Exiting...'
+                return 1
+              fi
+              for BRANCH in ${BRANCHES[@]}; do
+                cd lotus
+                git checkout $BRANCH
+                export LATEST_TAG=$(git describe --abbrev=0 --tags)
+                cd ../
+                if [[ $TYPE = "base" ]]; then
+                  packer validate packer-base.json
+                else
+                  packer validate packer-incremental.json
+                fi
+              done
         - slack/status
 
   build:
@@ -45,6 +59,10 @@ jobs:
                 echo $ACCOUNT | base64 -d > account.json
               fi
               git clone https://github.com/filecoin-project/lotus
+              if [[ -z $BRANCHES ]]; then
+                echo '$BRANCHES variable is not set. Please, set it as a project variable. Exiting...'
+                return 1
+              fi
               for BRANCH in ${BRANCHES[@]}; do
                 cd lotus
                 git checkout $BRANCH
