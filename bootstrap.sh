@@ -26,7 +26,7 @@ install_node() {
 
     echo "> Installing Lotus node..."
     echo ">> Clonning Filecoin repo..."
-    [ -d "/root/lotus" ] && git clone https://github.com/filecoin-project/lotus.git /root/lotus
+    [ ! -d "/root/lotus" ] && git clone https://github.com/filecoin-project/lotus.git /root/lotus
     cd /root/lotus
     git checkout $VERSION
     echo ">> Repo cloned"
@@ -100,7 +100,7 @@ install_powergate() {
     echo "> Installing the Textile Powergate..."
     cd /root
     echo ">> Clonning the Powergate repo..."
-    [ -d "/root/powergate" ] && git clone https://github.com/textileio/powergate /root/powergate
+    [ ! -d "/root/powergate" ] && git clone https://github.com/textileio/powergate /root/powergate
     echo ">> Cloned. Building Powergate..."
     cd /root/powergate
     make build-powd
