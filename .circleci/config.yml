@@ -110,9 +110,15 @@ workflows:
             #                - master
     jobs:
       - validate
+      - approve_rebuild:
+          type: approval
+          filters:
+            branches:
+              only: master
       - build:
           requires: 
             - validate
+            - approve_rebuild
   azure-base:
     jobs:
       - validate
@@ -135,9 +141,15 @@ workflows:
             #                - master
     jobs:
       - validate
+      - approve_rebuild:
+          type: approval
+          filters:
+            branches:
+              only: master
       - build:
-          requires: 
+          requires:
             - validate
+            - approve_rebuild
   gcp-base:
     jobs:
       - validate
@@ -160,6 +172,13 @@ workflows:
           #                - master
     jobs:
       - validate
+      - approve_rebuild:
+          type: approval
+          filters:
+            branches:
+              only: master
       - build:
-          requires: 
+          requires:
             - validate
+            - approve_rebuild
+
