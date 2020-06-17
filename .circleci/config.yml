@@ -127,12 +127,12 @@ workflows:
             - approve_rebuild
   azure-incremental:
     triggers:
-      - schedule:
-          cron: "0 0 * * *"
-          filters:
-            branches:
-              only:
-                - master
+            #      - schedule:
+            #          cron: "0 0 * * *"
+            #          filters:
+            #            branches:
+            #              only:
+            #                - master
     jobs:
       - validate
       - build:
@@ -151,13 +151,13 @@ workflows:
             - validate
             - approve_rebuild
   gcp-incremental:
-    triggers:
-      - schedule:
-          cron: "0 0 * * *"
-          filters:
-            branches:
-              only:
-                - master
+          #    triggers:
+          #      - schedule:
+          #          cron: "0 0 * * *"
+          #          filters:
+          #            branches:
+          #              only:
+          #                - master
     jobs:
       - validate
       - build:
