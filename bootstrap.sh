@@ -88,7 +88,7 @@ install_ipfs() {
     echo ">> Installed. Reloading SystemD..."
     systemctl daemon-reload
     echo ">> Reloaded. Creating ipfs user..."
-    useradd -m ipfs
+    id -u ipfs &>/dev/null || useradd -m ipfs
     echo ">> Added. Running and enabling IPFS node via SystemD..."
     systemctl enable ipfs.service && systemctl start ipfs.service
     echo ">> Done."
