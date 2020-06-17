@@ -28,6 +28,7 @@ install_node() {
     echo ">> Clonning Filecoin repo..."
     [ ! -d "/root/lotus" ] && git clone https://github.com/filecoin-project/lotus.git /root/lotus
     cd /root/lotus
+    git fetch
     git checkout $VERSION
     echo ">> Repo cloned"
     
