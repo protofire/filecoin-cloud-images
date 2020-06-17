@@ -102,12 +102,12 @@ workflows:
             - approve_rebuild
   aws-incremental:
     triggers:
-            #      - schedule:
-            #          cron: "0 0 * * *"
-            #          filters:
-            #            branches:
-            #              only:
-            #                - master
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
     jobs:
       - validate
       - build:
@@ -152,12 +152,12 @@ workflows:
             - approve_rebuild
   gcp-incremental:
     triggers:
-      - schedule:
-          cron: "0 0 * * *"
-          filters:
-            branches:
-              only:
-                - master
+            #      - schedule:
+            #          cron: "0 0 * * *"
+            #          filters:
+            #            branches:
+            #              only:
+            #                - master
     jobs:
       - validate
       - build:
