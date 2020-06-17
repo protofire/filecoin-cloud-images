@@ -53,7 +53,7 @@ jobs:
         - checkout
         - run:
             name: Build Packer configuration
-            no_output_timeout: 21d
+            no_output_timeout: 30000m
             command: |
               apk add jq curl
               export CIRCLE_WORKFLOW_NAME=$(curl -s https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM} | jq .workflows.workflow_name -r)
