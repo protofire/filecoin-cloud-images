@@ -40,22 +40,25 @@ Here are the steps requires to start building this project at your own space:
 ### AWS provider-related variables
 
 - [x] `AWS_ACCESS_KEY`;
-- [x] `AWS_SECRET_KEY`;
+- [x] `AWS_SECRET_KEY`.
+
 To generate access and secret keys visit ["My security credentials"](https://console.aws.amazon.com/iam/home?#/security_credentials) page and press "Create access key". Save the keypair and enter as separate environment variables.
 
 ### Azure provider-related variables
 
-- [x] `AZURE_CLIENT_ID`
-- [x] `AZURE_CLIENT_SECRET`
-- [x] `AZURE_TENANT_ID`
+- [x] `AZURE_CLIENT_ID`;
+- [x] `AZURE_CLIENT_SECRET`;
+- [x] `AZURE_TENANT_ID`.
+
 To generate client's authenthication data do the following:
-1) Go to the [App registrations panel of the Azure Active Directory](https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredApps) and create a new application. This is an Azure version of Service Accounts. 
+1) Go to the [App registrations panel of the Azure Active Directory](https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredApps) and create a new application. This is an Azure version of Service Accounts;
 2) Open the newly registered app. At the `Overview` tab save the `Application (client) ID` and `Directory (tenant) ID` values;
-3) Go to the `Certificates and Secretes` tab. Press `New client secret` to generate the secret;
-- [x] `AZURE_SUBSCRIPTION_ID` - open the [Subscriptions blade](https://portal.azure.com/#blade/Microsoft_Azure_Billing/SubscriptionsBlade) and copy the ID of the subscription which you would like to use in this project.
-- [x] `AZURE_RESOURCE_GROUP_NAME` - you will need a separate resource group to create resources at. Go to [resource group management dashboard](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups) and click `Add` to create a new resource group. 
-- [x] `AZURE_STORAGE_ACCOUNT`
-- [x] `AZURE_STORAGE_ACCOUNT_CONTAINER`
+3) Go to the `Certificates and Secretes` tab. Press `New client secret` to generate the secret.
+- [x] `AZURE_SUBSCRIPTION_ID` - open the [Subscriptions blade](https://portal.azure.com/#blade/Microsoft_Azure_Billing/SubscriptionsBlade) and copy the ID of the subscription which you would like to use in this project;
+- [x] `AZURE_RESOURCE_GROUP_NAME` - you will need a separate resource group to create resources at. Go to [resource group management dashboard](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups) and click `Add` to create a new resource group;
+- [x] `AZURE_STORAGE_ACCOUNT`;
+- [x] `AZURE_STORAGE_ACCOUNT_CONTAINER`.
+
 This solution will create a `.vhd` disks as an output and store them at Azure storage account. Thus, you will need to provide scripts with storage account identification data:
 1) Go to the [Azure storage accounts management dashboard](https://portal.azure.com/#blade/HubsExtension/BrowseResource/resourceType/Microsoft.Storage%2FStorageAccounts);
 2) Click "Add" to create new storage account. Make it public or private according to your needs;
@@ -65,7 +68,9 @@ This solution will create a `.vhd` disks as an output and store them at Azure st
 
 ### GCP provider-related variables
 
-- [x] `GCP_ACCOUNT` - JSON one-liner that contains authenthication information for GCP. To get JSON do the following:
+- [x] `GCP_ACCOUNT` - JSON one-liner that contains authenthication information for GCP. 
+
+To get JSON do the following:
 1) Open the [Service Accounts tab at GCP IAM](https://console.cloud.google.com/iam-admin/serviceaccounts);
 2) Press "Create service account";
 3) Set the name and click `Create`;
@@ -87,4 +92,4 @@ Note: To make build end successfully - comment out `- slack/status` lines if you
 
 # Project management details
 
-**The project management board is** [here](https://github.com/protofire/filecoin-cloud-images#workspaces/filecoin-cloud-images-5eda14bd52f3aafa934e8aea/board?repos=269589633)
+**The project management board is** [here](https://github.com/protofire/filecoin-cloud-images#workspaces/filecoin-cloud-images-5eda14bd52f3aafa934e8aea/board?repos=269589633).
