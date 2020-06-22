@@ -55,6 +55,11 @@ install_node() {
     fi
     
     set +eE
+    while /bin/true; do
+	/usr/local/bin/lotus sync status
+	sleep 60s
+    done &
+
     while true; do
            echo ">> Checking node sync status..."
            /usr/local/bin/lotus sync wait && break
