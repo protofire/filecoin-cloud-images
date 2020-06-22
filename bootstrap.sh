@@ -119,6 +119,7 @@ Requires=ipfs.service
 
 [Service]
 ExecStart=/usr/local/bin/powd --lotustokenfile /root/.lotus/token
+WorkingDirectory=/root/powergate/iplocation/maxmind
 
 [Install]
 WantedBy=multi-user.target
@@ -147,6 +148,6 @@ install_powergate
 
 systemctl status lotus-daemon
 systemctl status ipfs
-systemctl status powergate
+systemctl status powergate || true # Workaround since powergate supports only latest network
 
 echo "Node launched. Script finished. Please, check the log above for any errors that might occur during the installation."
