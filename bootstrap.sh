@@ -87,9 +87,7 @@ install_ipfs() {
     chmod a+x /usr/bin/ipfs
     echo ">> Installed. Installing SystemD configs..."
     wget -O /etc/systemd/system/ipfs.service  https://raw.githubusercontent.com/ipfs/go-ipfs/master/misc/systemd/ipfs.service
-    mkdir -p /etc/systemd/system/ipfs.service.d/
-    wget -O /etc/systemd/system/ipfs.service.d/ipfs-api.socket https://raw.githubusercontent.com/ipfs/go-ipfs/master/misc/systemd/ipfs-api.socket
-    wget -O /etc/systemd/system/ipfs.service.d/ipfs-sysusers.conf https://raw.githubusercontent.com/ipfs/go-ipfs/master/misc/systemd/ipfs-sysusers.conf
+    sed -e s/Environment=IPFS_PATH=\"\${HOME}\"//g -i /etc/systemd/system/ipfs.service
     echo ">> Installed. Reloading SystemD..."
     systemctl daemon-reload
     echo ">> Reloaded. Creating ipfs user..."
@@ -146,5 +144,9 @@ install_config
 install_node
 install_ipfs
 install_powergate
+
+systemctl status lotus-daemon
+systemctl status ipfs
+systemctl status powergate
 
 echo "Node launched. Script finished. Please, check the log above for any errors that might occur during the installation."
