@@ -82,7 +82,7 @@ This solution will create a `.vhd` disks as an output and store them at Azure st
 
 ### Optional variables:
 
-- [] `SLACK_WEBHOOK` - URL to the webhook that allows posting building information to the slack channels.
+- [ ] `SLACK_WEBHOOK` - URL to the webhook that allows posting building information to the slack channels.
 Note: To make build end successfully - comment out `- slack/status` lines if you haven't set the `SLACK_WEBHOOK` variables.
 
 # Project management details
