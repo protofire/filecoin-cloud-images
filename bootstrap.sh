@@ -146,6 +146,10 @@ install_node
 install_ipfs
 install_powergate
 
+echo "Sleeping to let services start..."
+sleep 60s
+echo "Checking daemon statuses..."
+
 systemctl status lotus-daemon
 systemctl status ipfs
 systemctl status powergate || true # Workaround since powergate supports only latest network
