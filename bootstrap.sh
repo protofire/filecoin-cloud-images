@@ -141,6 +141,12 @@ echo "> Updating apps and installing deps"
 add-apt-repository ppa:longsleep/golang-backports && apt-get update -y && apt-get install -yy make golang-go gcc git bzr jq pkg-config mesa-opencl-icd ocl-icd-opencl-dev && apt-get dist-upgrade -y
 echo "> Apps set installed."
 
+set +eE
+systemctl is-active --quiet lotus-daemon && systemctl stop lotus-daemon
+systemctl is-active --quiet ipfs && systemctl stop ipfs
+systemctl is-active --quiet powergate && systemctl stop powergate
+set -eE
+
 install_config
 install_node
 install_ipfs
