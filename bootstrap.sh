@@ -26,7 +26,8 @@ install_node() {
 
     echo "> Installing Lotus node..."
     echo ">> Clonning Filecoin repo..."
-    [ ! -d "/root/lotus" ] && git clone https://github.com/filecoin-project/lotus.git /root/lotus
+    [ -d "/root/lotus" ] && rm -R /root/lotus
+    git clone https://github.com/filecoin-project/lotus.git /root/lotus
     cd /root/lotus
     git fetch
     git checkout $VERSION
