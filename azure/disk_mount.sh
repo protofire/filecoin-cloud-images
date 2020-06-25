@@ -12,7 +12,14 @@ while true; do
   for DISK in /dev/sd?; do
 	echo ">> Trying to mount $DISK..."
 	TO_MOUNT=$DISK
-  	mkfs.xfs $DISK && echo ">>> Mounted." && flag=1 && break
+	DISK_TYPE=$(blkid -o value -s TYPE $DISK)
+	if [[ "$DISK_TYPE" == "xfs" ]]; then
+		echo ">>> Existing disk, mounting..."
+		flag=1
+		break
+	else
+  		mkfs.xfs $DISK && echo ">>> Mounted." && flag=1 && break
+	fi
 	echo ">>> Error. Sleeping 10s and then retrying..."
 	sleep 10s
   done

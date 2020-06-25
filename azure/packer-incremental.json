@@ -25,11 +25,12 @@
             "temp_compute_name": "filecoin",
 	    "storage_account": "{{user `azure_storage_account`}}",
             "capture_container_name": "{{user `azure_storage_account_container`}}",
-	    "capture_name_prefix": "filecoin-{{user `latest_tag` | clean_resource_name}}",
-            "disk_additional_size": ["{{user `volume_size`}}"],
+	    "capture_name_prefix": "filecoin-{{user `branch` | clean_resource_name}}",
             "os_type": "Linux",
-            "image_url": "https://filecoin.blob.core.windows.net/vhds/filecoin-{{user `branch`}}-osDisk.vhd",
-            "azure_tags": {
+    	    "image_publisher": "Canonical",
+            "image_offer": "UbuntuServer",
+            "image_sku": "18.04-LTS", 
+	    "azure_tags": {
               "application": "Filecoin",
               "build": "{{user `latest_tag`}}"
             },
@@ -40,7 +41,7 @@
     "provisioners": [
        {
 	    "type": "shell-local",
-	    "inline": "az vm unmanaged-disk attach -g {{user `azure_resource_group_name`}} --vm-name filecoin --name data --vhd-uri https://filecoin.blob.core.windows.net/vhds/filecoin-{{user `branch`}}-dataDisk-0.vhd"
+	    "inline": "az vm unmanaged-disk attach -g {{user `azure_resource_group_name`}} --vm-name filecoin --name data --vhd-uri $(curl -s 'https://filecoin.blob.core.windows.net/system?restype=container&maxresults=1&comp=list&prefix=Microsoft.Compute/Images/filecoin/filecoin-{{user `branch`}}-dataDisk' | xmllint --xpath //EnumerationResults/Blobs/Blob/Url - | cut -d '>' -f 2 | cut -d '<' -f 1)"   
        },
        {
             "type": "shell",
