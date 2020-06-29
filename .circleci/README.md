@@ -75,7 +75,3 @@ To get JSON do the following:
 
 - [ ] `SLACK_WEBHOOK` - URL to the webhook that allows posting building information to the slack channels.
 Note: To make build end successfully - comment out `- slack/status` lines if you haven't set the `SLACK_WEBHOOK` variables.
-
-# Project management details
-
-**The project management board is** [here](https://github.com/protofire/filecoin-cloud-images#workspaces/filecoin-cloud-images-5eda14bd52f3aafa934e8aea/board?repos=269589633).

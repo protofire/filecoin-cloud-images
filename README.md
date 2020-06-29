@@ -123,3 +123,6 @@ Use the `sudo systemctl status/start/stop/restart/enable/disable` command with t
 
 When installing the node, make sure the RPC port (`1234/TCP`) is secured. The node is installed in accordance with the Lotus best practices. However, it is worth remembering that end users are responsible for securing nodes on their own.
 
+# Project management details
+
+**The project management board is** [here](https://github.com/protofire/filecoin-cloud-images#workspaces/filecoin-cloud-images-5eda14bd52f3aafa934e8aea/board?repos=269589633).
