@@ -22,7 +22,7 @@
             "tenant_id": "{{user `azure_tenant_id`}}",
             "resource_group_name": "{{user `azure_resource_group_name`}}",
             "build_resource_group_name": "{{user `azure_resource_group_name`}}",
-            "temp_compute_name": "filecoin",
+            "temp_compute_name": "filecoin-{{user `branch` | clean_resource_name}}",
 	    "storage_account": "{{user `azure_storage_account`}}",
             "capture_container_name": "{{user `azure_storage_account_container`}}",
 	    "capture_name_prefix": "filecoin-{{user `branch` | clean_resource_name}}",
