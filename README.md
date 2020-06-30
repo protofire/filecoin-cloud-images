@@ -48,8 +48,8 @@ To create a Filecoin VM on GCP, you need to create a custom image in your projec
 
 To create a custom image, go to `Compute engine`, click `Images`, and then click `Create image`. Fill out all the necessary fields. For more instructions, check out this [article](https://cloud.google.com/compute/docs/images/create-delete-deprecate-private-images#bundle_image).
 For example:
-1) Set ‘Filecoin’ as an image name.
-2) Select `Cloud Storage file` as a source for an image and specify the following link as a cloud storage file link *filecoin/filecoin-<tag>-latest.tar.gz*. Get `<tag>` from [our GitHub](https://github.com/filecoin-project/lotus/tags).
+1) Set `Filecoin` as an image name.
+2) Select `Cloud Storage file` as a source for an image and specify the following link as a cloud storage file link `filecoin/filecoin-<tag>-latest.tar.gz`. Get `<tag>` from [our GitHub](https://github.com/filecoin-project/lotus/tags).
 3) Click *Create*
 
 
@@ -68,7 +68,7 @@ To create a VM on Microsoft Azure, you will have to complete the following steps
 
 Open the following link substituting the variables in `${}` brackets: https://filecoin.blob.core.windows.net/system?restype=container&comp=list&maxresults=1&prefix=Microsoft.Compute/Images/filecoin/filecoin-${BRANCH}-${TYPE}Disk 
 
-, where ${BRANCH} is either `master` for the test network or `interopnet` for the interop network, and ${TYPE} is `os` and `data`. For example, to find the OS disk for the test network, the link will look the following way: https://filecoin.blob.core.windows.net/system?restype=container&comp=list&maxresults=1&prefix=Microsoft.Compute/Images/filecoin/filecoin-master-osDisk 
+, where `${BRANCH}` is either `master` for the test network or `interopnet` for the interop network, and `${TYPE}` is `os` and `data`. For example, to find the OS disk for the test network, the link will look the following way: https://filecoin.blob.core.windows.net/system?restype=container&comp=list&maxresults=1&prefix=Microsoft.Compute/Images/filecoin/filecoin-master-osDisk 
 You will receive the XML array when opening the link above:
 ```
 <EnumerationResults ContainerName="https://filecoin.blob.core.windows.net/system">
