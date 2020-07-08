@@ -29,7 +29,7 @@ Installation is cloud-specific.
 To get an AWS image, you will have to complete the following steps: 
 
 1) Open your [aws console](https://console.aws.amazon.com/) at the [AMI's page](https://console.aws.amazon.com/ec2/v2/home?region=us-east-1#Images:visibility=public-images;search=filecoin;sort=name).
-2) Choose a region (US East 1 , AP South 1 and EU Central 1 are currently supported). 
+2) Choose a region (US East 2 , AP South 1 and EU Central 1 are currently supported). 
 3) Select `Public AMI` at the filters dropdown menu and search for Filecoin images. 
 4) At the search bar, you can add 711012187398 as an image owner to ensure that Filecoin images are official and to shorten the output. All the official images are named as `filecoin-<branch>-<tag>-<creation_date>`, where `<tag>` is one of the tags from [our GitHub](https://github.com/filecoin-project/lotus/tags), and `<creation_date>` is the accurate date and time when the images were created to reflect the timestamp of the Lotus chain. Note that some of the old tags might be missing, as there is no need to keep the old releases.
 5) Select an appropriate image and press the `Launch` button.
