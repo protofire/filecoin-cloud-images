@@ -68,7 +68,7 @@ To create a VM on Microsoft Azure, you will have to complete the following steps
 
 Open the following link substituting the variables in `${}` brackets: https://filecoin.blob.core.windows.net/system?restype=container&comp=list&maxresults=1&prefix=Microsoft.Compute/Images/filecoin/filecoin-${BRANCH}-${TYPE}Disk 
 
-, where `${BRANCH}` is either `master` for the test network or `interopnet` for the interop network, and `${TYPE}` is `os` and `data`. For example, to find the OS disk for the test network, the link will look the following way: https://filecoin.blob.core.windows.net/system?restype=container&comp=list&maxresults=1&prefix=Microsoft.Compute/Images/filecoin/filecoin-master-osDisk 
+, where `${BRANCH}` is either `master` for the test network or `ntwk-butterfly` for the butterfly network, and `${TYPE}` is `os` and `data`. For example, to find the OS disk for the test network, the link will look the following way: https://filecoin.blob.core.windows.net/system?restype=container&comp=list&maxresults=1&prefix=Microsoft.Compute/Images/filecoin/filecoin-master-osDisk 
 You will receive the XML array when opening the link above:
 ```
 <EnumerationResults ContainerName="https://filecoin.blob.core.windows.net/system">
