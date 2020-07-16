@@ -24,7 +24,7 @@
     ],
     "provisioners": [
        {
-	    "max_retries": 10000,
+	    "max_retries": 25,
             "type": "shell",
             "execute_command": "{{.Vars}} sudo -E su root /bin/sh -c '{{.Path}}'",
             "script": "../bootstrap.sh",
