@@ -10,7 +10,7 @@
         "branch": "{{env `BRANCH`}}",
         "latest_tag": "{{env `LATEST_TAG`}}",
         "snapshot_url": "{{env `SNAPSHOT_URL`}}",
-        "volume_size": "60"
+        "volume_size": "100"
     },
     "sensitive-variables": ["azure_subscription_id","azure_tenant_id","azure_client_secret"],
     "builders": [
@@ -41,7 +41,7 @@
     "provisioners": [
        {
 	    "type": "shell-local",
-	    "inline": "az vm unmanaged-disk attach -g {{user `azure_resource_group_name`}} --vm-name filecoin-{{user `branch`}} --name data --vhd-uri $(curl -s 'https://filecoin.blob.core.windows.net/system?restype=container&maxresults=1&comp=list&prefix=Microsoft.Compute/Images/filecoin/filecoin-{{user `branch`}}-dataDisk' | xmllint --xpath //EnumerationResults/Blobs/Blob/Url - | cut -d '>' -f 2 | cut -d '<' -f 1)"   
+	    "inline": "az vm unmanaged-disk attach --size-gb {{user `volume_size`}} -g {{user `azure_resource_group_name`}} --vm-name filecoin-{{user `branch`}} --name data --vhd-uri $(curl -s 'https://filecoin.blob.core.windows.net/system?restype=container&maxresults=1&comp=list&prefix=Microsoft.Compute/Images/filecoin/filecoin-{{user `branch`}}-dataDisk' | xmllint --xpath //EnumerationResults/Blobs/Blob/Url - | cut -d '>' -f 2 | cut -d '<' -f 1)"   
        },
        {
             "type": "shell",

@@ -10,7 +10,7 @@
         "branch": "{{env `BRANCH`}}",
 	"latest_tag": "{{env `LATEST_TAG`}}",
 	"snapshot_url": "{{env `SNAPSHOT_URL`}}",
-        "volume_size": "60"
+        "volume_size": "100"
     },
     "sensitive-variables": ["azure_subscription_id","azure_tenant_id","azure_client_secret"],
     "builders": [
