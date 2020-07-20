@@ -17,7 +17,7 @@ cat << EOF > /root/.lotus/config.toml
 [Client]
   UseIpfs = true
   IpfsUseForRetrieval = true
-  IpfsMAddr = "/dns4/ipfs/tcp/5001"
+  IpfsMAddr = "/dns4/127.0.0.1/tcp/5001"
 EOF
 
 }
