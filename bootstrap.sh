@@ -119,7 +119,7 @@ Requires=lotus-daemon.service
 Requires=ipfs.service
 
 [Service]
-ExecStart=/usr/local/bin/powd --lotustokenfile /root/.lotus/token
+ExecStart=/usr/local/bin/powd --lotustokenfile /root/.lotus/token --repopath /root/.lotus/.powergate
 WorkingDirectory=/root/powergate/iplocation/maxmind
 
 [Install]
