@@ -7,7 +7,7 @@
         "branch": "{{env `BRANCH`}}",
 	"latest_tag": "{{env `LATEST_TAG`}}",
         "snapshot_url": "{{env `SNAPSHOT_URL`}}",
-        "volume_size": "100"
+        "volume_size": "250"
     },
     "sensitive-variables": ["aws_access_key","aws_secret_key"],
     "builders": [

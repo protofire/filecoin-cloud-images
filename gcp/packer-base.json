@@ -6,7 +6,7 @@
 	"branch": "{{env `BRANCH`}}",
         "latest_tag": "{{env `LATEST_TAG`}}",
         "snapshot_url": "{{env `SNAPSHOT_URL`}}",
-        "volume_size": "100"
+        "volume_size": "250"
     },
     "builders": [
        {
