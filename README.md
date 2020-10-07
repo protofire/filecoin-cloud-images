@@ -1,3 +1,7 @@
+# Deprecation notice
+
+This project has been deprecated. It is still useful for those who wants to run their own cloud images on AWS/GCP/Azure clouds, but there will be no more hosted cloud images on Protofire side.
+
 # Overview
 
 This repository contains a multicloud configuration for [Packer by Hashicorp](https://packer.io). Packer is designed to create so-called "golden" or "baked" cloud images - a set of disk snapshots with a set of predefined applications installed inside. These images are usually used to simplify onboarding of end users - one can simply reuse the existing images instead of spending time on manual installation of each component.
